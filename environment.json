@@ -1,0 +1,15 @@
+[
+    {
+        "Date": "2024-Decembre-01 08:00",
+        "Température": 22.5,
+        "Humidité": 60,
+        "CO2": 400
+    },
+    {
+        "Date": "2024-Decembre-01 09:00", 
+        "Température": 23.1,
+        "Humidité": 58,
+        "CO2": 410
+    }
+]
+  

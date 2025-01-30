@@ -1,0 +1,14 @@
+[
+    {
+        "Date": "2024-Decembre-01 12:00",
+        "Parametre": "Température",
+        "Valeur": 35.0,
+        "Message": "Température trop élevée"
+    },
+    {
+        "Date": "2024-Novembre-15 18:30",
+        "Parametre": "CO2",
+        "Valeur": 1200.0,
+        "Message": "CO2 trop élevé"
+    }
+]
