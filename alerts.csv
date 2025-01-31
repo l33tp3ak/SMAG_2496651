@@ -1,0 +1,15 @@
+Date: 2024-12-01 12:00
+Paramètre: Température
+Valeur: 26.0
+Message: Alerte: Température élevée
+
+Date: 2024-12-01 12:02
+Paramètre: Humidité
+Valeur: 70.0
+Message: Alerte: Humidité élevée
+
+Date: 2024-12-01 12:04
+Paramètre: CO2
+Valeur: 1500.0
+Message: Alerte: CO2 élevé
+
