@@ -1,0 +1,26 @@
+{
+  "active_alerts": [],
+  "read_alerts": [],
+  "alerts_by_time": {
+    "30 January 2025 06:16PM": {
+      "Temperature": {
+        "Value": 33,
+        "Message": "Temperature trop fort"
+      },
+      "CO2": {
+        "Value": 454,
+        "Message": "CO2 trop fort"
+      }
+    },
+    "30 January 2025 06:17PM": {
+      "Temperature": {
+        "Value": 17,
+        "Message": "Temperature trop faible"
+      },
+      "CO2": {
+        "Value": 456,
+        "Message": "CO2 trop fort"
+      }
+    }
+  }
+}

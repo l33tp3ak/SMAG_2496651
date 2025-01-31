@@ -1,0 +1,6 @@
+{
+    "Temperature": {"min": 20, "max": 30},
+    "Humidite": {"min": 50, "max": 70},
+    "Lumiere": {"min": 200, "max": 1000},
+    "CO2": {"min": 350, "max": 450}
+}

@@ -1,0 +1,20 @@
+{
+  "30 January 2025 06:00PM": {
+    "Temperature": 26,
+    "Humidite": 78,
+    "Lumiere": 921,
+    "CO2": 433
+  },
+  "30 January 2025 06:16PM": {
+    "Temperature": 33,
+    "Humidite": 50,
+    "Lumiere": 367,
+    "CO2": 454
+  },
+  "30 January 2025 06:17PM": {
+    "Temperature": 17,
+    "Humidite": 54,
+    "Lumiere": 310,
+    "CO2": 456
+  }
+}
