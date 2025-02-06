@@ -4,7 +4,11 @@ import tkinter as tk
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from chargement import open_env_data 
+from chargement import open_data
+import datetime
+
+from optimal_threshold import optimal_thresholds
+
 # Fonction pour obtenir les conditions simulées
 
 
@@ -34,18 +38,49 @@ def condition_actuelles(main_frame):
     top_frame_gauche.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5, pady=5)
 
     # Charger les données depuis le fichier JSON via chargement.py
-    environment_data = open_env_data("environment.json")
+    environment_data = open_data("environment.json")
 
     # Vérification que les données sont bien chargées
-    latest_entry = environment_data[-1] if environment_data else {}
-    environment_data_list = {k: v for k, v in latest_entry.items() if k != "Date"}
+    # Chargement des données en ordre
+    data_by_most_recent = sorted(environment_data.keys(), key=lambda x: datetime.datetime.strptime(x, "%d %B %Y %I:%M%p"), reverse=True)
+    latest_entry = environment_data[data_by_most_recent[0]] if environment_data else {}
 
+    # Convertie les manque de donnée pour des données vides
+    seuil = open_data("optimal_threshold.json")
+    absolute_zero = -273.15
+    for parametre in seuil:
+        if latest_entry.get(parametre) is None:
+            if parametre == "Température":
+                latest_entry[parametre] = absolute_zero
+            else:
+                latest_entry[parametre] = 0
+    #print(data_by_most_recent)
+    #print(data_by_most_recent[0])
+    #print(latest_entry)
+
+    tk.Label(top_frame_gauche, text=f"Données en date du {data_by_most_recent[0]}", font=("Arial", 12), bg="#8B8B7A", anchor="w").grid(row=0, column=0, sticky="w", padx=10, pady=5)
+    tk.Label(top_frame_gauche, text=f"Moyenne Aujourd'hui", font=("Arial", 12), bg="#8B8B7A", anchor="w").grid(row=0, column=2, sticky="w", padx=10, pady=5)
+    derniere_date = data_by_most_recent[0]
+    last_row = 0
+    unit = {"Température": " °C", "Humidité": " %", "CO2": " ppm", "Lumière": " lux"}
     #On parcourt la dernier donné json avec son paramètre et sa valeur, et on ajoute l'unité de mesure associée à chaque paramètre. Exemple : 'Température': '°C'.
-    for i, (param, value) in enumerate(environment_data_list.items()):
-        unit = {"Température": " °C", "Humidité": " %", "CO2": " ppm", "Lumière": " lux"}.get(param, "") # associer chaque paramètre (param) à son unité de mesure.
-        formatted_value = f"{value}{unit}" # combine la valeur (value) et l'unité (unit) en une seule chaîne de caractères formatée.
-        tk.Label(top_frame_gauche, text=f"{param} :", font=("Arial", 12), bg="#8B8B7A", anchor="w").grid(row=i, column=0, sticky="w", padx=10, pady=5)
-        tk.Label(top_frame_gauche, text=formatted_value, font=("Arial", 12), bg="#CDCDB4", fg="#292421").grid(row=i, column=1, sticky="w", padx=10, pady=5)
+    for i, (param, value) in enumerate(latest_entry.items()):
+        # associer chaque paramètre (param) à son unité de mesure.
+        formatted_value = f"{value}{unit.get(param, "")}" # combine la valeur (value) et l'unité (unit) en une seule chaîne de caractères formatée.
+        last_row = i+1
+        tk.Label(top_frame_gauche, text=f"{param} :", font=("Arial", 12), bg="#8B8B7A", anchor="w").grid(row=last_row, column=0, sticky="w", padx=10, pady=5)
+        tk.Label(top_frame_gauche, text=formatted_value, font=("Arial", 12), bg="#CDCDB4", fg="#292421").grid(row=last_row, column=1, sticky="e", padx=10, pady=5)
+        somme = 0
+        moyenne = 0
+        for i in environment_data:
+            if datetime.datetime.strptime(data_by_most_recent[0], "%d %B %Y %I:%M%p").strftime("%d %B %Y") in i:
+                somme += environment_data[i][param]
+                moyenne +=1
+
+        tk.Label(top_frame_gauche, text="{:.2f}".format(somme/moyenne)+unit.get(param, ""), font=("Arial", 12), bg="#CDCDB4", fg="#292421").grid(row=last_row, column=2, sticky="w", padx=10, pady=5)
+
+
+
 
  
     # -- FRAME DE DROITE -- pour afficher les 3 boutons/volumes
@@ -84,13 +119,23 @@ def create_jauge(bottom_frame):
     gauges_frame = tk.Frame(graph_frame, bg="#1E1E1E")
     gauges_frame.pack(fill=tk.X, padx=20, pady=20)
    
-    environment_data = open_env_data("environment.json")
-    latest_entry = environment_data[-1] if environment_data else {}
+    environment_data = open_data("environment.json")
+
+    data_by_most_recent = sorted(environment_data.keys(), key=lambda x: datetime.datetime.strptime(x, "%d %B %Y %I:%M%p"), reverse=True)
+    latest_entry = environment_data[data_by_most_recent[0]] if environment_data else {}
     environment_data_list = {k: v for k, v in latest_entry.items() if k != "Date"}
-    
-    jauge(gauges_frame, "Température", environment_data_list["Température"], 10, 40, COLORS["temp"], "°C")  #<-------------- # Appel de la fonction jauge() pour créer une jauge 
-    jauge(gauges_frame, "Humidité", environment_data_list["Humidité"], 10, 100, COLORS["humidity"], "%")                      # La fonction jauge() est définie avec les paramètres suivants :
-    jauge(gauges_frame, "CO2", environment_data_list["CO2"], 111, 1100, COLORS["co2"], "ppm")                                 # frame : Le conteneur parent dans lequel la jauge sera placée (ici, gauges_frame)
+    seuil = open_data("optimal_threshold.json")
+    absolute_zero = -273.15
+    for parametre in seuil:  # On prend que la partie date ********
+        if latest_entry.get(parametre) is None:
+            if parametre == "Température":
+                latest_entry[parametre] = absolute_zero
+            else:
+                latest_entry[parametre] = 0
+
+    jauge(gauges_frame, "Température", latest_entry["Température"], 10, 40, COLORS["temp"], "°C")  #<-------------- # Appel de la fonction jauge() pour créer une jauge
+    jauge(gauges_frame, "Humidité", latest_entry["Humidité"], 10, 100, COLORS["humidity"], "%")                      # La fonction jauge() est définie avec les paramètres suivants :
+    jauge(gauges_frame, "CO2", latest_entry["CO2"], 111, 1100, COLORS["co2"], "ppm")                                 # frame : Le conteneur parent dans lequel la jauge sera placée (ici, gauges_frame)
                                                                                                                             # - title : Le titre de la jauge (ici, ",Température, Humidité, CO2 ").
                                                                                                                             # - value : La valeur actuelle à afficher ()
                                                                                                                             # - min_val : La valeur minimale de la jauge exemple temperature (ici,15 ).
