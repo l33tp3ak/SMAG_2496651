@@ -17,7 +17,6 @@ def struct_add_alerts(parametre, sensor_data, time = None):
 		time = datetime.datetime.now().strftime("%d %B %Y %I:%M%p")
 
 	if (alertes_data.get(time) == None):
-
 		alertes_data[time] = {
 			parametre: {
 				"valeur": sensor_data,
@@ -69,32 +68,3 @@ def auto_sensor_data():
 	struct_sensor_data("CO2", time)
 
 	return chargement.open_data("environment.json")
-
-#environment = chargement.open_data("environment.json")
-#print(sorted(environment.keys(), key=lambda x: datetime.datetime.strptime(x, "%d %B %Y %I:%M%p"), reverse=True))
-
-"""# Tri des données par heure (comme ranger des livres dans l'ordre)
-#filtered_data.sort(key=lambda x: x["Date"].split()[1])                      #************************
-
-
-environment = chargement.open_data("environment.json")
-print(environment)
-environment = auto_sensor_data()
-for entry in environment:
-	print(entry)
-
-date_choisi = f"03 February 2025"  # Création de la date formatée
-
-# Chargement des données depuis le fichier JSON
-data = chargement.open_data("environment.json")
-filtered_data = []  # Liste vide qu'on va remplir
-
-# Filtrage : on garde seulement les données de la date choisie
-for entry in data: # On prend que la partie date ********
-	if date_choisi in entry:                                                     #  On regarde si notre donnée est pour notre date choisie
-		filtered_data.append(datetime.datetime.strptime(entry, "%d %B %Y %I:%M%p").time())  # Ajout à la liste si ça correspond              #***********
-
-print(filtered_data)
-
-filtered_data.sort()
-print(filtered_data)"""

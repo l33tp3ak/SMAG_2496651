@@ -125,13 +125,12 @@ def ajoute_donne(main_frame):
 		messagebox.showinfo("Succès", f"Données enregistrées pour la date : {time}")
 
 		# Réinitialisation des champs
-		jour_combo.set("")
-		jour_combo.current(int(datetime.datetime.now().strftime("%d")))
-		mois_combo.set("")
-		mois_combo.current(int(datetime.datetime.now().strftime("%m")) - 1)
+		jour_combo.set(datetime.datetime.now().strftime("%d"))
+		mois_combo.set(datetime.datetime.now().strftime("%B"))
 		annee_combo.set(datetime.datetime.now().strftime("%Y"))
 		heure_entry.delete(0, tk.END)
 		heure_entry.insert(0, datetime.datetime.now().strftime("%I:%M"))
+		ampm_combo.set(datetime.datetime.now().strftime("%p"))
 		temperature_entry.delete(0, tk.END)
 		humidite_entry.delete(0, tk.END)
 		lumiere_entry.delete(0, tk.END)

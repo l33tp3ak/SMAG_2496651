@@ -97,6 +97,36 @@ def creer_fenetre_alertes(alertes_param = None, alertes_date = None):
 		canvas.configure(scrollregion=canvas.bbox("all"))
 		return fenetre
 
+def get_problem_trolololo(alertes_param, alertes_date):
+	# Chargement des données depuis le fichier JSON
+	alertes = open_data("alertes.json")
+	seuil = open_data("optimal_threshold.json")
+	groupes = {}
+
+	list_tally = {}
+	for param in seuil:
+		list_tally[param] = 0
+		# print(alerte)
+		# print(alertes)
+		for dates in alertes:
+			if alertes_date in dates:
+				for parametre in alertes[dates]:
+					if param == parametre:
+						list_tally[param] += 1
+
+
+	if (list_tally["Température"] > list_tally["Humidité"]) and (list_tally["Température"] > list_tally["CO2"]) and (list_tally["Température"] > list_tally["Lumière"]):
+		return "Température"
+	elif (list_tally["Humidité"] > list_tally["Température"]) and (list_tally["Humidité"] > list_tally["CO2"]) and (list_tally["Humidité"] > list_tally["Lumière"]):
+		return "Humidité"
+	elif (list_tally["CO2"] > list_tally["Température"]) and (list_tally["CO2"] > list_tally["Humidité"]) and (list_tally["CO2"] > list_tally["Lumière"]):
+		return "CO2"
+	elif (list_tally["Lumière"] > list_tally["Température"]) and (list_tally["Lumière"] > list_tally["Humidité"]) and (list_tally["Lumière"] > list_tally["CO2"]):
+		return "Lumière"
+	else:
+		return "aucun paramètre"
+
+
 
 
 def unite(parametre):

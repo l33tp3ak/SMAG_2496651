@@ -63,6 +63,7 @@ def afficher_menu_tendances(parent_frame):
 	date_label.grid(row=0, column=0, sticky="w", padx=10, pady=5)
 	moyenne_label = tk.Label(frame_de_droite, text=f"Moyenne", font=("Arial", 12), bg="#8B8B7A", anchor="w")
 	moyenne_label.grid(row=0, column=2, sticky="w", padx=10, pady=5)
+	problem_label = tk.Label(frame_de_droite, text=f"Le paramètre le plus problématique est:", font=("Arial", 12), anchor="e")
 
 
 
@@ -104,12 +105,6 @@ def afficher_menu_tendances(parent_frame):
 							moyenne += 1
 
 				tk.Label(frame_de_droite, text="{:.2f}".format(somme / moyenne) + unit.get(param), font=("Arial", 12), bg="#CDCDB4", fg="#292421").grid(row=last_row, column=2, sticky="w", padx=10, pady=5)
-
-			"""nom_des_parametre["temp"].config(text=f"Température : {latest[date].get('Température')}°C")
-			nom_des_parametre["humidity"].config(text=f"Humidité : {latest[date].get('Humidité')}%")
-			nom_des_parametre["light"].config(text=f"Lumière : {latest[date].get('Lumière')} lux")
-			nom_des_parametre["co2"].config(text=f"CO2 : {latest[date].get('CO2')} ppm")
-			nom_des_parametre["date"].config(text=f"Date : {date}")"""
 
 
 	# =============== Partie 2 Creation Bouton "Afficher" SECTION GAUCHE en dessous des Combobox SECTION GAUCHE
@@ -157,9 +152,14 @@ def afficher_menu_tendances(parent_frame):
 		# Mise à jour de l'interface et du graphique
 		def afficher_alertes_param_date():
 			gestion_alertes.creer_fenetre_alertes(parameter_combox.get(), date_choisi)
+
+
 		# Création du bouton des Alertes
 		boutton_alertes.pack(side=tk.RIGHT, padx=5)
 		boutton_alertes.configure(command=afficher_alertes_param_date)
+
+		problem_label.grid(row=0, column=3, sticky="w", padx=10, pady=5)
+		problem_label.configure(text=f"Le paramètre le plus problématique est: {gestion_alertes.get_problem_trolololo(parameter_combox.get(), date_choisi)}")
 
 		print(frame_parametre.winfo_children())
 
