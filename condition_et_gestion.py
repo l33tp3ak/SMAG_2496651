@@ -7,8 +7,6 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from chargement import open_data
 import datetime
 
-from optimal_threshold import optimal_thresholds
-
 # Fonction pour obtenir les conditions simulées
 
 
