@@ -71,37 +71,65 @@ def export_data_to_csv(data = open_data("environment.json"), file = None):
 
 
 	filename = os.path.join(export_dir, file)
+	if (file == "alertes.csv"):
+		header = []
+
 
 	# Écriture du fichier
 	with open(filename, 'w', newline='', encoding='utf-8-sig') as f:
 		if (file == "alertes.csv"):
+			# Aplatie le titre des colonnes à partir de notre dictionnaire extrait du JSON
+			header = ["Date", "Paramètre"]
 			for date_fields in data:
-				dates = []
-				dates.append(date_fields)
-				writer = csv.DictWriter(f, fieldnames=dates, delimiter=';')
-				writer.writeheader()
+				rest_of_fields = []
 				for parameter_fields in data[date_fields]:
-					fields_pour_parametre = []
-					fields_pour_parametre.append(parameter_fields)
-					writer = csv.DictWriter(f, fieldnames=fields_pour_parametre, delimiter=';')
-					writer.writeheader()
-					fields = []
 					for parameter in data[date_fields][parameter_fields]:
-						fields.append(parameter)
-					writer = csv.DictWriter(f, fieldnames=fields, delimiter=';')
-					writer.writeheader()
-					writer.writerow(data[date_fields][parameter_fields])
-		else:
+						rest_of_fields.append(parameter)
+
+			# Écrit le titre des colonnes
+			header = header + rest_of_fields
+			writer = csv.DictWriter(f, fieldnames=header, delimiter=';')
+			writer.writeheader()
+
+			# Ouvre notre CSV de nouveau pour écrire les données
+			writer = csv.writer(f, delimiter=';')
+
+			# Aplatie nos données extraites de notre JSON pour correspondre à nos colonnes
 			for date_fields in data:
-				dates = []
-				dates.append(date_fields)
-				writer = csv.DictWriter(f, fieldnames=dates, delimiter=';')
-				writer.writeheader()
-				fields = []
+				for parameter_fields in data[date_fields]:
+					# Chaque donnée de notre JSON doit avoir les clés précédentes répétées.
+					# Celles-ci doivent donc être ajoutées just avant le plus bas niveau, pour chaque donnée, à toutes les fois.
+
+					fields = [date_fields, parameter_fields]
+
+					for parameter in data[date_fields][parameter_fields]:
+						# On ajoute nos données, finalisant l'aplatissement
+						fields.append(data[date_fields][parameter_fields][parameter])
+
+					# Écrit nos données aplaties
+					writer.writerow(fields)
+
+		else:
+			# Aplatie le titre des colonnes à partir de notre dictionnaire extrait du JSON
+			header = ["Date"]
+			param = open_data("optimal_threshold.json")
+			for parameter in param:
+				header.append(parameter)
+
+			# Écrit le titre des colonnes
+			writer = csv.DictWriter(f, fieldnames=header, delimiter=';')
+			writer.writeheader()
+
+			# Ouvre notre CSV de nouveau pour écrire les données
+			writer = csv.writer(f, delimiter=';')
+
+			# Aplatie nos données extraites de notre JSON pour correspondre à nos colonnes
+			for date_fields in data:
+				fields = [date_fields]
 				for parameter in data[date_fields]:
-					fields.append(parameter)
-				writer = csv.DictWriter(f, fieldnames=fields, delimiter=';')
-				writer.writeheader()
-				writer.writerow(data[date_fields])
+					fields.append(data[date_fields][parameter])
+
+				# Écrit nos données aplaties
+				writer.writerow(fields)
 
 	return filename

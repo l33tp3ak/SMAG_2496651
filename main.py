@@ -55,7 +55,7 @@ def main_interface():
         environment = chargement.open_data("environment.json")
         chargement.export_data_to_csv(alertes, "alertes.csv")
         chargement.export_data_to_csv(environment, "environment.csv")
-        # Ceci ferme TOUTES les fenêtres, car car nous interceptons le protocol de sorti ET il ferme également l'interpréteur.
+        # Ceci ferme TOUTES les fenêtres, car nous interceptons le protocol de sorti ET il ferme également l'interpréteur.
         # Ainsi, TOUS les processus reliés au programme sont fermés en même temps.
         root.destroy()
         exit()
